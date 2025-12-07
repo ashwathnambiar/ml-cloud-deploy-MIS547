@@ -1,0 +1,15 @@
+[
+  {
+    "author_steamid": "12345",
+    "author_num_games_owned": 10,
+    "author_num_reviews": 2,
+    "votes_up": 5,
+    "votes_funny": 0,
+    "comment_count": 1,
+    "author_playtime_forever": 300,
+    "author_playtime_last_two_weeks": 20,
+    "author_playtime_at_review": 280,
+    "received_for_free": 0,
+    "weighted_vote_score": 0.95
+  }
+]

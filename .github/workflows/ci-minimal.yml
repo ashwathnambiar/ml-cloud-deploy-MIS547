@@ -13,22 +13,28 @@ permissions:
 jobs:
   build_test_push:
     runs-on: ubuntu-latest
-    env:
-      # Lowercase the full "owner/repo" to ensure the docker tag is valid
-      IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.sha }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set IMAGE env (lowercase repo name)
+        # use bash to lowercase GITHUB_REPOSITORY reliably and export IMAGE to GITHUB_ENV
+        run: |
+          echo "Computed IMAGE: ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}"
+          echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> $GITHUB_ENV
+
+      - name: Show IMAGE
+        run: echo "IMAGE=$IMAGE"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t $IMAGE .
+        run: docker build -t "$IMAGE" .
 
       - name: Run smoke tests inside container
-        run: docker run --rm $IMAGE
+        run: docker run --rm "$IMAGE"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -45,7 +51,7 @@ jobs:
 
       - name: Save deploy metadata
         run: |
-          echo "{ \"image\": \"${{ env.IMAGE }}\" }" > deploy_meta.json
+          echo "{ \"image\": \"${IMAGE}\" }" > deploy_meta.json
 
       - name: Upload metadata artifact
         uses: actions/upload-artifact@v4

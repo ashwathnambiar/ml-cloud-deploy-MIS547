@@ -7,5 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-# run smoke tests by default
+# Ensure Python sees the repository root as a package root
+ENV PYTHONPATH=/app
+
+# Run tests by default (pytest will import app.smoke successfully)
 CMD ["pytest", "-q"]

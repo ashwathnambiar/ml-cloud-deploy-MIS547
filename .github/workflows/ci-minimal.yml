@@ -14,7 +14,8 @@ jobs:
   build_test_push:
     runs-on: ubuntu-latest
     env:
-      IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+      # Lowercase the full "owner/repo" to ensure the docker tag is valid
+      IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.sha }}
 
     steps:
       - name: Checkout code
